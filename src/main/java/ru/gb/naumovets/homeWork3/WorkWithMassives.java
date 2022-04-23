@@ -93,7 +93,7 @@ public class WorkWithMassives {
         //положительным, или отрицательным), при этом метод должен сместить все элементы массива
         //на n позиций. Элементы смещаются циклично. Для усложнения задачи нельзя пользоваться
         //вспомогательными массивами.
-        int[] arr_4 = new int[5];
+        int[] arr_4 = new int[10];
         for (int i = 0; i < arr_4.length; i++) {
             arr_4[i] = i;
         }
@@ -138,13 +138,13 @@ public class WorkWithMassives {
             for (int i = 0; i < arr.length; i++) {
                 System.out.println(i);
                 if(i == 0){
-                    buff_next = arr[i + n];// = 1
-                    arr[i + n] = arr[i]; //1 = 0
+                    buff_next = arr[i + n];
+                    arr[i + n] = arr[i];
                     System.out.println(Arrays.toString(arr));
                 } else if(i < arr.length - 1) {
-                    buff_current = arr[i + n];// = 2
-                    arr[i + n] = buff_next;// = 1
-                    buff_next = buff_current; //= 2
+                    buff_current = arr[i + n];
+                    arr[i + n] = buff_next;
+                    buff_next = buff_current;
                     System.out.println(Arrays.toString(arr));
                 } else if(i == arr.length - 1){
                     arr[0] = buff_next;
