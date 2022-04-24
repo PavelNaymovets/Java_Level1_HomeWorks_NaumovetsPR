@@ -90,7 +90,7 @@ public class WorkWithMassives {
             arr_4[i] = i;
         }
         System.out.println(Arrays.toString(arr_4));
-        offsetElements(arr_4, 1);
+        offsetElements(arr_4, -6);
     }
 
     //Ex. 5.
@@ -126,21 +126,41 @@ public class WorkWithMassives {
     public static void offsetElements(int[] arr, int n){
         int buff_next = 0;
         int buff_current = 0;
-        if(n > 0){
-            for (int i = 0; i < arr.length; i++) {
-                System.out.println(i);
-                if(i == 0){
-                    buff_next = arr[i + n];
-                    arr[i + n] = arr[i];
-                    System.out.println(Arrays.toString(arr));
-                } else if(i < arr.length - 1) {
-                    buff_current = arr[i + n];
-                    arr[i + n] = buff_next;
-                    buff_next = buff_current;
-                    System.out.println(Arrays.toString(arr));
-                } else if(i == arr.length - 1){
-                    arr[0] = buff_next;
-                    System.out.println(Arrays.toString(arr));
+        if(n == 0){
+        } else if(n > 0){
+            for (int j = 1; j <= n; j++) {
+                for (int i = 0; i < arr.length; i++) {
+                    System.out.println(i);
+                    if (i == 0) {
+                        buff_next = arr[i + 1];
+                        arr[i + 1] = arr[i];
+                        System.out.println(Arrays.toString(arr));
+                    } else if (i < arr.length - 1) {
+                        buff_current = arr[i + 1];
+                        arr[i + 1] = buff_next;
+                        buff_next = buff_current;
+                        System.out.println(Arrays.toString(arr));
+                    } else if (i == arr.length - 1) {
+                        arr[0] = buff_next;
+                        System.out.println(Arrays.toString(arr));
+                    }
+                }
+            }
+        } else {
+            for (int j = 1; j <= Math.abs(n); j++) {
+                for (int i = 0; i < arr.length; i++) {
+                    System.out.println(i);
+                    if (i == 0) {
+                        buff_next = arr[arr.length - 1];
+                        arr[arr.length - 1] = arr[i];
+                        System.out.println(Arrays.toString(arr));
+                    } else if (i < arr.length - 1){
+                        arr[i - 1] = arr [i];
+                        System.out.println(Arrays.toString(arr));
+                    } else if (i == arr.length - 1) {
+                        arr[i - 1] = buff_next;
+                        System.out.println(Arrays.toString(arr));
+                    }
                 }
             }
         }
