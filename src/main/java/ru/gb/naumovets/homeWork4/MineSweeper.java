@@ -15,9 +15,9 @@ public class MineSweeper {
     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_WHITE = "\u001B[37m";
 
-    private static final int WIDTH = 10;
-    private static final int HEIGHT = 10;
-    private static final int MINE_COUNT = 25; // не должно быть больше чем WIDTH * HEIGHT;
+    private static int width;
+    private static int height;
+    private static int mineCount; // не должно быть больше чем WIDTH * HEIGHT;
 
     private static final int MINE = 1000;
     private static final int EMPTY = 0;
@@ -26,27 +26,65 @@ public class MineSweeper {
     private static final int CELL_FLAG = -1;
 
     public static void main(String[] args) {
-        System.out.println(ANSI_GREEN);
+        System.out.print(ANSI_GREEN);
         System.out.println("Добро пожаловать в игру!" + "\n" + " Перед вами поле для игры в сапер. Ниже представлен небольшой свод правил. Пожалуйста, следуйте им для комфортной игры." + "\n" + " После того, как ознакомитесь с ними, выберите уровень сложности (от этого будет зависеть размер поля) и количество мин, которые вы хотели бы расставить по полю." + "\n" + "\n" + "Правила игры: " + "\n" + "1. Для выполнения хода введите в консоль с начала номер столбца, а затем строки (например A1)." + "\n" + "2. Нельзя вводить две буквы друг за другом и какие - либо иные символы (например AA, A/, A& и пр.), так как это не соответствует формату игрового поля." + "\n" + "3. Если вы хотите отметить ячейку флажком укажите знак * рядом с вашим ходом (например А1*)" + "\n" + "4. Первым символом может быть только буква. Иные символы использовать нельзя" + "\n" + "5. Старайтесь не выходить за границы поля" + "\n" + "6. Не нужно вводить символы после знака *. Это не соответствует формату поля");
         System.out.println(ANSI_RESET);
         Scanner in = new Scanner(System.in);
         System.out.println("Выберите уровень сложности: " + "\n" + "1.Легко" + "\n" + "2.Средне" + "\n" + "3.Сложно");
-        while (in.nextLine().charAt(0) - '0' < 0 || in.nextLine().charAt(0) - '0' > 9) {
-            System.err.println("Укажите цифру сложности");
+        String level;
+        while (true) {
+            level = in.nextLine();
+            if ((level.charAt(0) - '0' < 1 || level.charAt(0) - '0' > 3) || level.length() > 1) {
+                System.err.println("Укажите цифру от 1 до 3");
+            } else {
+                break;
+            }
         }
-        int level = in.nextInt();
-        System.out.println("Укажите количество мин: ");
+        setLevel(level);
+        String countOfMines;
+        System.out.print(ANSI_GREEN);
+        System.out.println("Укажите количество мин, но не больше чем: " + width * height);
+        System.out.print(ANSI_RESET);
+        while (true) {
+            countOfMines = in.nextLine();
+            if ((countOfMines.charAt(0) - '0' < 1 || countOfMines.charAt(0) - '0' > 9) || countOfMines.length() > 2) {
+                System.err.println("Укажите цифру от 1 до " + (width * height));
+            } else  if ((countOfMines.length() == 2 && (countOfMines.charAt(1) - '0' < 0 || countOfMines.charAt(1) - '0' > 9)) || Integer.parseInt(countOfMines) > 25){
+                System.err.println("Укажите цифру от 1 до " + (width * height));
+            } else {
+                break;
+            }
+        }
+        mineCount = Integer.parseInt(countOfMines);
         final boolean isWin = play();
         if (isWin) {
             System.out.println("Поздравляю!\nВы выиграли!");
         } else {
-            System.out.println("БАБАХ!!!\nВы проиграли!");
+            System.out.println("Вы сделали неверный шаг, который привел к поражению. Не расстраивайтесь!\nПопробуйте ещё раз!");
+        }
+    }
+
+    public static void setMineCount(){
+
+    }
+
+    public static void setLevel(String level){
+        int i = Integer.parseInt(level);
+        if (i == 1){
+            width = 3;
+            height = 3;
+        } else if (i == 2) {
+            width = 5;
+            height = 5;
+        } else if (i == 3) {
+            width = 7;
+            height = 7;
         }
     }
 
     public static boolean play() {
         int[][] board = generateBoard();
-        int[][] moves = new int[HEIGHT][WIDTH];
+        int[][] moves = new int[height][width];
         boolean isPassMove;
         boolean win;
         do {
@@ -65,7 +103,7 @@ public class MineSweeper {
                 }
             }
         }
-        return openCell == HEIGHT * WIDTH - MINE_COUNT;
+        return openCell == height * width - mineCount;
     }
 
     private static boolean move(final int[][] board, final int[][] moves) {
@@ -87,7 +125,7 @@ public class MineSweeper {
                     } else {
                         line = Integer.parseInt(s.substring(1));
                     }
-                    if (row >= 0 && row < HEIGHT && line >= 0 && line < WIDTH) {
+                    if (row >= 0 && row < height && line >= 0 && line < width) {
                         if (s.endsWith("*")) {
                             moves[line][row] = CELL_FLAG;
                             return true;
@@ -109,13 +147,13 @@ public class MineSweeper {
 
     private static void printBoard(final int[][] board, final int[][] moves) {
         System.out.print("   ");
-        for (char i = 'A'; i < 'A' + WIDTH; i++) {
+        for (char i = 'A'; i < 'A' + width; i++) {
             System.out.print(" " + i);
         }
         System.out.println();
-        for (int i = 0; i < HEIGHT; i++) {
+        for (int i = 0; i < height; i++) {
             System.out.printf("%3d", i);
-            for (int j = 0; j < WIDTH; j++) {
+            for (int j = 0; j < width; j++) {
                 if (moves[i][j] == CELL_CLOSE) {
                     System.out.print("[]");
                     continue;
@@ -166,15 +204,15 @@ public class MineSweeper {
     }
 
     private static int[][] fillMines() {
-        int[][] board = new int[HEIGHT][WIDTH];
-        int mines = MINE_COUNT;
-        if (MINE_COUNT > WIDTH * HEIGHT) { // зациклиться программа, так как мин больше чем свободных полей. Будет бесконечно искать поле, чтобы поставить мину. А его нет.
-            System.err.println("Число мин не должно превышать :" + (WIDTH * HEIGHT));
+        int[][] board = new int[height][width];
+        int mines = mineCount;
+        if (mineCount > width * height) { // зациклиться программа, так как мин больше чем свободных полей. Будет бесконечно искать поле, чтобы поставить мину. А его нет.
+            System.err.println("Число мин не должно превышать :" + (width * height));
             return null;
         } else {
             final Random random = new Random();
             while (mines > 0) {
-                int x = random.nextInt(HEIGHT), y = random.nextInt(WIDTH);
+                int x = random.nextInt(height), y = random.nextInt(width);
                 if (isMine(board[x][y])) {
                     continue;
                 }
@@ -186,8 +224,8 @@ public class MineSweeper {
     }
 
     private static void calculateMines(int[][] board) {
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 if (isMine(board[i][j])) {
                     continue;
                 }
@@ -204,7 +242,7 @@ public class MineSweeper {
         int mCount = 0;
         for (int i = line - 1; i <= line + 1; i++) {
             for (int j = row - 1; j <= row + 1; j++) {
-                if (i < 0 || i >= HEIGHT || j < 0 || j >= WIDTH) {
+                if (i < 0 || i >= height || j < 0 || j >= width) {
                     continue;
                 }
                 if (isMine(board[i][j])) {
