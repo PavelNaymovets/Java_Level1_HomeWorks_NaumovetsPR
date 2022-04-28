@@ -36,7 +36,7 @@ public class MineSweeper {
         String level;
         while (true) {
             level = in.nextLine();
-            if ((level.charAt(0) - '0' < 1 || level.charAt(0) - '0' > 3) || level.length() > 1) {
+            if (level.isEmpty() || (level.charAt(0) - '0' < 1 || level.charAt(0) - '0' > 3) || level.length() > 1) {
                 System.err.println("Укажите цифру от 1 до 3");
             } else {
                 break;
@@ -49,7 +49,7 @@ public class MineSweeper {
         System.out.print(ANSI_RESET);
         while (true) {
             countOfMines = in.nextLine();
-            if ((countOfMines.charAt(0) - '0' < 1 || countOfMines.charAt(0) - '0' > 9) || countOfMines.length() > 2) {
+            if (countOfMines.isEmpty() || (countOfMines.charAt(0) - '0' < 1 || countOfMines.charAt(0) - '0' > 9) || countOfMines.length() > 2) {
                 System.err.println("Укажите цифру от 1 до " + (width * height));
             } else  if ((countOfMines.length() == 2 && (countOfMines.charAt(1) - '0' < 0 || countOfMines.charAt(1) - '0' > 9)) || Integer.parseInt(countOfMines) > 25){
                 System.err.println("Укажите цифру от 1 до " + (width * height));
@@ -114,36 +114,48 @@ public class MineSweeper {
         while (true) {
             System.out.print("Ваш ход: ");
             String s = scanner.nextLine().toUpperCase(); // приводим к верхнему регистру
-            int row = s.charAt(0) - 'A';
-            if(s.length() == 1){
+            if(s.isEmpty()){
+                System.err.println("Повторите ход");
+            } else if (s.length() == 1){
                 System.err.println("Введите ход в формате буква и затем цифра");
             } else if (s.contains("*") && (s.indexOf('*') != s.length() - 1)) {
                 System.err.println("Не нужно вводить символы после знака *. Пожалуйста следуйте правилам");
             } else {
+                int row = s.charAt(0) - 'A';
                 if (s.charAt(1) - '0' < 0 || s.charAt(1) - '0' > 9) {
                     System.err.println("Нельзя вводить вторым значением символ отличный от цифры. Пожалуйста следуйте правилам игры");
                 } else {
-                    int line;
+                    int line = 0;
                     if (s.endsWith("*")) {
                         line = Integer.parseInt(s.substring(1, s.length() - 1));
                     } else {
-                        line = Integer.parseInt(s.substring(1));
-                    }
-                    if (row >= 0 && row < height && line >= 0 && line < width) {
-                        if (s.endsWith("*")) {
-                            moves[line][row] = CELL_FLAG;
-                            return true;
+                        int j = 1;
+                        int i = 1;
+                        for (; i < s.length(); i++, j++) {
+                            if(s.charAt(i) - '0' < 0 || s.charAt(i) - '0' > 9){
+                                j--;
+                            }
                         }
-                        if (isMine(board[line][row])) {
-                            return false;
+                        if(j == i){
+                            line = Integer.parseInt(s.substring(1));
+                            if (row >= 0 && row < height && line >= 0 && line < width) {
+                                if (s.endsWith("*")) {
+                                    moves[line][row] = CELL_FLAG;
+                                    return true;
+                                }
+                                if (isMine(board[line][row])) {
+                                    return false;
+                                }
+                                moves[line][row] = CELL_OPEN;
+                                return true;
+                            } else if (row < 0 || row > 9) {
+                                System.err.println("Вы ввели неправильный символ. Первым символом может быть только буква");
+                            }
+                            System.out.println("Вы вышли за границы поля. Сделайте ход еще раз");
+                        } else {
+                            System.err.println("Вы ввели неправильный символ после цифры. Попробуйте снова");
                         }
-                        moves[line][row] = CELL_OPEN;
-                        return true;
-                    } else if (row < 0 || row > 9) {
-                        System.err.println("Вы ввели неправильный символ. Первым символом может быть только буква");
                     }
-                    System.out.println("Вы вышли за границы поля. Сделайте ход еще раз");
-//                System.out.println("Неправильный ввод");
                 }
             }
         }
