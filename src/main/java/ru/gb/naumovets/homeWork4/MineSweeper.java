@@ -122,10 +122,10 @@ public class MineSweeper {
                 System.err.println("Не нужно вводить символы после знака *. Пожалуйста следуйте правилам");
             } else {
                 int row = s.charAt(0) - 'A';
+                int line = Integer.MAX_VALUE;
                 if (s.charAt(1) - '0' < 0 || s.charAt(1) - '0' > 9) {
                     System.err.println("Нельзя вводить вторым значением символ отличный от цифры. Пожалуйста следуйте правилам игры");
                 } else {
-                    int line = 0;
                     if (s.endsWith("*")) {
                         line = Integer.parseInt(s.substring(1, s.length() - 1));
                     } else {
@@ -138,25 +138,23 @@ public class MineSweeper {
                         }
                         if(j == i){
                             line = Integer.parseInt(s.substring(1));
-                            if (row >= 0 && row < height && line >= 0 && line < width) {
-                                if (s.endsWith("*")) {
-                                    moves[line][row] = CELL_FLAG;
-                                    return true;
-                                }
-                                if (isMine(board[line][row])) {
-                                    return false;
-                                }
-                                moves[line][row] = CELL_OPEN;
-                                return true;
-                            } else if (row < 0 || row > 9) {
-                                System.err.println("Вы ввели неправильный символ. Первым символом может быть только буква");
-                            }
-                            System.out.println("Вы вышли за границы поля. Сделайте ход еще раз");
-                        } else {
-                            System.err.println("Вы ввели неправильный символ после цифры. Попробуйте снова");
                         }
                     }
                 }
+                if (row >= 0 && row < height && line >= 0 && line < width) {
+                    if (s.endsWith("*")) {
+                        moves[line][row] = CELL_FLAG;
+                        return true;
+                    }
+                    if (isMine(board[line][row])) {
+                        return false;
+                    }
+                    moves[line][row] = CELL_OPEN;
+                    return true;
+                } else if (row < 0 || row > 9) {
+                    System.err.println("Вы ввели неправильный символ. Первым символом может быть только буква");
+                }
+                System.out.println("Вы вышли за границы поля или ввели неправильный символ после цифры. Сделайте ход еще раз");
             }
         }
     }
