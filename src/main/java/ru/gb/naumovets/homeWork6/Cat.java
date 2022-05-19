@@ -25,7 +25,7 @@ public class Cat extends Animal{
         System.out.println("Коты и кошки не умеют плавать");
     }
 
-    public int getCount(){
+    public static int getCount(){
         return count;
     }
 

@@ -29,9 +29,14 @@ public abstract class Animal {
         return count;
     }
 
+    public static int getCount(){
+        return count;
+    }
+
 
 
     public static void main(String[] args) {
+
         /*
         Пояснение
 
@@ -39,6 +44,7 @@ public abstract class Animal {
         создать метод getCount() в вклассе Animal и затем переопределить его в классах наследниках, чтобы он работал как следует.
 
          */
+
         Cat catBarsik = new Cat("Барсик");
         Cat catMurzik = new Cat("Мурзик");
         Cat catIvashka = new Cat("Ивашка");
@@ -51,11 +57,11 @@ public abstract class Animal {
         dogCharli.swim(10);
 
         //Подсчет количества котов
-        System.out.println("Всего создано объектов котов: " + catBarsik.getCount());
+        System.out.println("Всего создано объектов котов: " + Cat.getCount());
         //Подсчет количества собак
-        System.out.println("Всего создано объектов собак: " + dogCharli.getCount());
+        System.out.println("Всего создано объектов собак: " + Dog.getCount());
         //Подсчет количества животных
-        System.out.println("Всего создано объектов животных: " + dogCharli.getCountAnimal());
+        System.out.println("Всего создано объектов животных: " + Animal.getCount());
 
         /*
 
