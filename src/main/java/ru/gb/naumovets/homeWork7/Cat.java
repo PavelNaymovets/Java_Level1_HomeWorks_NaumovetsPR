@@ -14,7 +14,8 @@ public class Cat {
         this.appetite = appetite;
     }
 
-    //Метод, который позволяет коту кушать. Уменьшает количество еды в тарелке на величину аппетита кота
+    //Метод, который позволяет коту кушать. Уменьшает количество еды в тарелке на величину аппетита кота. Если кот
+    //сыт, то он не кушает
     public void eat(Plate plate){
         if(plate.getFood() >= appetite && !satiety){
             plate.decreaseFood(appetite);
